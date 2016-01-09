@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="../dest/rk.core.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    rk.declare('demo1.StaticClass', {
+        statics: {
+            init:function(){
+                console.log('static init method~!');
+            },
+            method1: function () {
+                console.log('method1~!');
+            }
+        }
+    });
+</script>
+</body>
+</html>
