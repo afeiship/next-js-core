@@ -1,0 +1,22 @@
+{
+  "name": "next-js-core",
+  "homepage": "https://github.com/afeiship/next-js-core",
+  "description": "A javascript oop toolkit.",
+  "main": "dest/nx.core.min.js",
+  "moduleType": [],
+  "keywords": [
+    "javascript",
+    "oop"
+  ],
+  "authors": [
+    "afei"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
