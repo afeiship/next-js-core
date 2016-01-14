@@ -1,0 +1,26 @@
+{
+  "name": "next-js-core",
+  "version": "1.0.0",
+  "description": "A javascript oop toolkit.",
+  "main": "dest/nx.core.min.js",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afeiship/next-js-core.git"
+  },
+  "keywords": [
+    "oop"
+  ],
+  "author": "afei",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/afeiship/next-js-core/issues"
+  },
+  "homepage": "https://github.com/afeiship/next-js-core#readme"
+}
