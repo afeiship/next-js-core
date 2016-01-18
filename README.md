@@ -19,4 +19,4 @@
 
 
 ##Bug issue:
-+ this.base() will invalid in 'use strict' mode.
++ this.base() will invalid in 'use strict' mode.(use this.$base.xxMethods() instead)
