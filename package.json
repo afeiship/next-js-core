@@ -1,6 +1,6 @@
 {
   "name": "next-js-core",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A javascript oop toolkit.",
   "main": "dest/nx.core.min.js",
   "directories": {
