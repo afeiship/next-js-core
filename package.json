@@ -17,6 +17,10 @@
   "keywords": [
     "oop"
   ],
+  "files":[
+    "dest/nx.core.js",
+    "dest/nx.core.min.js"
+  ],
   "author": "afei",
   "license": "MIT",
   "bugs": {
