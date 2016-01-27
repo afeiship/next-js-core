@@ -7,6 +7,7 @@
     __classId__: 0,
     __type__: 'nx.RootClass',
     __init__: nx.noop,
+    __static_init__: nx.noop,
     __mixins__: [],
     __statics__: {},
     __events__: [],

@@ -170,6 +170,7 @@ if (typeof module !== 'undefined' && module.exports) {
     __classId__: 0,
     __type__: 'nx.RootClass',
     __init__: nx.noop,
+    __static_init__: nx.noop,
     __mixins__: [],
     __statics__: {},
     __events__: [],
@@ -283,7 +284,7 @@ if (typeof module !== 'undefined' && module.exports) {
       inClassMeta.__static__ = inMeta.statics && !inMeta.methods;
       inClassMeta.__classId__ = classId++;
       inClassMeta.__init__ = (methods && methods.init) || base.__init__;
-      inClassMeta.__static_init__ = (statics && statics.init);
+      inClassMeta.__static_init__ = (statics && statics.init) || base.__static_init__;
       inClassMeta.$base = base.prototype;
     },
     createClassProcessor: function (inMeta, inClassMeta) {

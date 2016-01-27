@@ -77,7 +77,7 @@
       inClassMeta.__static__ = inMeta.statics && !inMeta.methods;
       inClassMeta.__classId__ = classId++;
       inClassMeta.__init__ = (methods && methods.init) || base.__init__;
-      inClassMeta.__static_init__ = (statics && statics.init);
+      inClassMeta.__static_init__ = (statics && statics.init) || base.__static_init__;
       inClassMeta.$base = base.prototype;
     },
     createClassProcessor: function (inMeta, inClassMeta) {
