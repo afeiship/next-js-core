@@ -27,10 +27,12 @@ test('norml-init', function () {
         methods: {
             init: function () {
                 num1++;
+              debugger;
             }
         }
     });
 
+  debugger;
     var c1 = new demo.Class1();
     ok(num1 == 2, 'Init has execute!');
     ok(demo.Class1.__methods__.length === 1, 'Only one method.')

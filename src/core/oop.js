@@ -74,9 +74,10 @@
       var base = inClassMeta.__base__ = inMeta.extend || nx.RootClass;
       var methods = inMeta.methods,
         statics = inMeta.statics;
-      var isStatic = inClassMeta.__static__ = inMeta.statics && !inMeta.methods;
+      inClassMeta.__static__ = inMeta.statics && !inMeta.methods;
       inClassMeta.__classId__ = classId++;
-      inClassMeta.__init__ = (isStatic ? (statics && statics.init) : (methods && methods.init )) || base.__init__;
+      inClassMeta.__init__ = (methods && methods.init) || base.__init__;
+      inClassMeta.__static_init__ = (statics && statics.init);
       inClassMeta.$base = base.prototype;
     },
     createClassProcessor: function (inMeta, inClassMeta) {
@@ -165,7 +166,8 @@
     },
     staticConstructorProcessor: function (inMeta, inClassMeta) {
       //if (inClassMeta.__static__) {
-      this.__Constructor__.call(this.__Class__);
+      //this.__Constructor__.call(this.__Class__);
+      inClassMeta.__static_init__.call(this.__Class__);
       //}
     },
     registerNamespace: function (inMeta, inClassMeta) {
