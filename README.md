@@ -17,6 +17,10 @@
 ##New feature：
 + Normalize static/statics/property/init and other concept.
 
+##build
++ cd build
++ npm install
++ grunt --force
 
 ##Bug issue:
 + this.base() will invalid in 'use strict' mode.(use this.$base.xxMethods() instead)
