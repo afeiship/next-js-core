@@ -186,6 +186,9 @@ if (typeof module !== 'undefined' && module.exports) {
         return method.apply(this, arguments);
       }
     },
+    meta: function (inName) {
+      return this['__' + inName + '__'];
+    },
     init: function () {
       //will be implement
     },

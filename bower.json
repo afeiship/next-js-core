@@ -2,7 +2,7 @@
   "name": "next-js-core",
   "homepage": "https://github.com/afeiship/next-js-core",
   "description": "A javascript oop toolkit.",
-  "main": "dest/nx.core.min.js",
+  "main": "dist/nx.core.min.js",
   "moduleType": [],
   "keywords": [
     "javascript",
@@ -18,6 +18,7 @@
     "bower_components",
     "test",
     "tests",
+    "example",
     "build",
     "src"
   ]

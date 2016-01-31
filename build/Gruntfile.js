@@ -25,11 +25,11 @@
 
   grunt.initConfig({
     jsSrcDir: jsSrcPath,
-    jsDestDir: rootPath + '/dest',
+    jsDestDir: rootPath + '/dist',
     clean: {
       base: {
         src: [
-          rootPath + '/dest'
+          rootPath + '/dist'
         ]
       }
     },

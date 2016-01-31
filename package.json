@@ -18,8 +18,8 @@
     "oop"
   ],
   "files":[
-    "dest/nx.core.js",
-    "dest/nx.core.min.js"
+    "dist/nx.core.js",
+    "dist/nx.core.min.js"
   ],
   "author": "afei",
   "license": "MIT",

@@ -190,3 +190,5 @@ test("nx.path", function () {
     nx.path(jobj2, "4.new.net", ['11']);
     deepEqual(nx.path(jobj2, "4.new.net"), ['11']);
 });
+
+
