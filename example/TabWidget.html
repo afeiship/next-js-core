@@ -1,72 +1,72 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script type="text/javascript" src="../src/libs/jquery.min.js"></script>
-    <script type="text/javascript" src="../dist/nx.core.js"></script>
-    <style type="text/css">
-        .demo-widget-Tab .item[data-active] {
-            cursor: pointer;
-        }
+  <meta charset="UTF-8">
+  <title></title>
+  <script type="text/javascript" src="../src/libs/jquery.min.js"></script>
+  <script type="text/javascript" src="../dist/nx.core.js"></script>
+  <style type="text/css">
+    .demo-widget-Tab .item[data-active] {
+      cursor: pointer;
+    }
 
-        .demo-widget-Tab .item[data-active=true] {
-            color: #f00;
-            *zoom:1;
-        }
-    </style>
+    .demo-widget-Tab .item[data-active=true] {
+      color: #f00;
+      *zoom: 1;
+    }
+  </style>
 </head>
 <body>
 <div class="demo-widget-Tab">
-    <div class="item" data-active="true">Item1</div>
-    <div class="item" data-active="false">Item2</div>
-    <div class="item" data-active="false">Item3</div>
+  <div class="item" data-active="true">Item1</div>
+  <div class="item" data-active="false">Item2</div>
+  <div class="item" data-active="false">Item3</div>
 </div>
 <script type="text/javascript">
-    nx.declare('demo.widget.Tab', {
-        properties: {
-            $index: {
-                get: function () {
-                    return this._$el.find('[data-active=true]').index();
-                },
-                set: function (inIndex) {
-                    var items = this.items();
-                    items.attr('data-active', false);
-                    items.eq(inIndex).attr('data-active', true);
-                    items.eq(inIndex).css('zoom',1);
-                }
-            }
+  nx.declare('demo.widget.Tab', {
+    properties: {
+      $index: {
+        get: function () {
+          return this._$el.find('[data-active=true]').index();
         },
-        methods: {
-            init: function (inSelector, inOptions) {
-                this.base();
-                this._$el = $(inSelector);
-                this._eventName = inOptions.eventName;
-                this.onItemClick();
-            },
-            items: function () {
-                return this._$el.find('[data-active]');
-            },
-            onItemClick: function () {
-                var self = this;
-                var items = this.items(), item;
-                items.on(this._eventName, function (event) {
-                    item = $(event.target);
-                    self.$index(item.index());
-                    console.log('Inner...',self.$index());
-                    self.fire('itemActive', item);
-                });
-            }
+        set: function (inIndex) {
+          var items = this.items();
+          items.attr('data-active', false);
+          items.eq(inIndex).attr('data-active', true);
+          items.eq(inIndex).css('zoom', 1);
         }
-    });
+      }
+    },
+    methods: {
+      init: function (inSelector, inOptions) {
+        this.base();
+        this._$el = $(inSelector);
+        this._eventName = inOptions.eventName;
+        this.onItemClick();
+      },
+      items: function () {
+        return this._$el.find('[data-active]');
+      },
+      onItemClick: function () {
+        var self = this;
+        var items = this.items(), item;
+        items.on(this._eventName, function (event) {
+          item = $(event.target);
+          self.$index(item.index());
+          console.log('Inner...', self.$index());
+          self.fire('itemActive', item);
+        });
+      }
+    }
+  });
 
-    var instance = new demo.widget.Tab('.demo-widget-Tab', {
-        eventName: 'click'
-    });
-    instance.on('itemActive', function (sender, item) {
-        console.log(item.text());
-    });
-    //    instance.$index(1);
+  var instance = new demo.widget.Tab('.demo-widget-Tab', {
+    eventName: 'click'
+  });
+  instance.on('itemActive', function (sender, item) {
+    console.log(item.text());
+  });
+  //    instance.$index(1);
 </script>
 </body>
 </html>
