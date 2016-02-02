@@ -40,7 +40,7 @@ var nx = {
         target.__each__(callback, context);
       } else {
         length = target.length;
-        if (nx.isLikeArray(target)) {
+        if (nx.isArrayLike(target)) {
           for (key = 0; key < length; key++) {
             if (callback.call(context, key, target[key]) === nx.BREAKER) {
               break;
