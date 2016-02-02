@@ -233,6 +233,26 @@ var nx = {
     return target;
   };
 
+  nx.map = function (target, callback) {
+    var value, values = [], i, key;
+    if (nx.isArrayLike(target)) {
+      for (i = 0; i < target.length; i++) {
+        value = callback(target[i], i);
+        if (value != null) {
+          values.push(value);
+        }
+      }
+    } else {
+      for (key in target) {
+        value = callback(target[key], key);
+        if (value != null) {
+          values.push(value);
+        }
+      }
+    }
+    return nx.flatten(values);
+  };
+
   nx.path = function (target, path, value) {
     if (!nx.isString(path)) {
       nx.error('Path must be a string!');
@@ -266,6 +286,20 @@ var nx = {
     };
     result = string.replace(rPath, replaceFn);
     return result;
+  };
+
+  nx.toArray = function (obj) {
+    if (!obj) return [];
+    if (obj.length === +obj.length) return slice.call(obj);
+    return [obj];
+  };
+
+  nx.parse = function (value) {
+    return JSON.parse(value);
+  };
+
+  nx.stringify = function (value, replacer, space) {
+    return JSON.stringify(value, replacer, space);
   };
 
 }(nx, nx.GLOBAL));

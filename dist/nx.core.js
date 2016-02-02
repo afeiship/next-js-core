@@ -17,6 +17,7 @@ var nx = {
     slice = emptyArray.slice,
     concat = emptyArray.concat;
 
+  var rPath = /(?:{)([\w.]+?)(?:})/gm;
   var javascriptType = 'Boolean Number String Function Array Date RegExp Object Error';
 
   //populate class2type map:
@@ -28,6 +29,10 @@ var nx = {
   nx.noop = function () {
   };
 
+  nx.error = function (msg) {
+    throw new Error(msg);
+  };
+
   nx.each = function (target, callback, context) {
     var key, length;
     if (target) {
@@ -35,7 +40,7 @@ var nx = {
         target.__each__(callback, context);
       } else {
         length = target.length;
-        if (nx.isLikeArray(target)) {
+        if (nx.isArrayLike(target)) {
           for (key = 0; key < length; key++) {
             if (callback.call(context, key, target[key]) === nx.BREAKER) {
               break;
@@ -74,6 +79,10 @@ var nx = {
     return !isNaN(obj) && typeof(obj) == 'number';
   };
 
+  nx.isBoolean = function (obj) {
+    return typeof(obj) == 'boolean';
+  };
+
   nx.isString = function (obj) {
     return typeof(obj) == 'string';
   };
@@ -82,7 +91,7 @@ var nx = {
       return obj instanceof Array;
     };
 
-  nx.isLikeArray = function (obj) {
+  nx.isArrayLike = function (obj) {
     return typeof obj.length == 'number';
   };
 
@@ -167,6 +176,29 @@ var nx = {
     return str == null ? "" : String.prototype.trim.call(str)
   };
 
+  nx.deserializeValue = function (value) {
+    try {
+      return value ?
+      value == "true" ||
+      ( value == "false" ? false :
+        value == "null" ? null :
+          +value + "" == value ? +value :
+            /^[\[\{]/.test(value) ? $.parseJSON(value) :
+              value )
+        : value;
+    } catch (e) {
+      return value;
+    }
+  };
+
+  nx.dasherize = function (str) {
+    return str.replace(/::/g, '/')
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+      .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+      .replace(/_/g, '-')
+      .toLowerCase()
+  };
+
   nx.clone = function (target, source, deep) {
     var isPlainObject = nx.isPlainObject,
       isArray = nx.isArray;
@@ -201,9 +233,29 @@ var nx = {
     return target;
   };
 
+  nx.map = function (target, callback) {
+    var value, values = [], i, key;
+    if (nx.isArrayLike(target)) {
+      for (i = 0; i < target.length; i++) {
+        value = callback(target[i], i);
+        if (value != null) {
+          values.push(value);
+        }
+      }
+    } else {
+      for (key in target) {
+        value = callback(target[key], key);
+        if (value != null) {
+          values.push(value);
+        }
+      }
+    }
+    return nx.flatten(values);
+  };
+
   nx.path = function (target, path, value) {
-    if (typeof path !== 'string') {
-      throw new Error('Path must be a string!');
+    if (!nx.isString(path)) {
+      nx.error('Path must be a string!');
     }
 
     var paths = path.split('.'),
@@ -223,6 +275,31 @@ var nx = {
       result[last] = value;
     }
     return result;
+  };
+
+  nx.format = function (string, args) {
+    var result = string || '';
+    var replaceFn = nx.isArray(args) ? function (str, match) {
+      return args[match];
+    } : function (str, match) {
+      return nx.path(args, match);
+    };
+    result = string.replace(rPath, replaceFn);
+    return result;
+  };
+
+  nx.toArray = function (obj) {
+    if (!obj) return [];
+    if (obj.length === +obj.length) return slice.call(obj);
+    return [obj];
+  };
+
+  nx.parse = function (value) {
+    return JSON.parse(value);
+  };
+
+  nx.stringify = function (value, replacer, space) {
+    return JSON.stringify(value, replacer, space);
   };
 
 }(nx, nx.GLOBAL));
