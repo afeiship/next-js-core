@@ -82,7 +82,7 @@ var nx = {
       return obj instanceof Array;
     };
 
-  nx.isLikeArray = function (obj) {
+  nx.isArrayLike = function (obj) {
     return typeof obj.length == 'number';
   };
 
@@ -165,6 +165,29 @@ var nx = {
 
   nx.trim = function (str) {
     return str == null ? "" : String.prototype.trim.call(str)
+  };
+
+  nx.deserializeValue = function (value) {
+    try {
+      return value ?
+      value == "true" ||
+      ( value == "false" ? false :
+        value == "null" ? null :
+          +value + "" == value ? +value :
+            /^[\[\{]/.test(value) ? $.parseJSON(value) :
+              value )
+        : value;
+    } catch (e) {
+      return value;
+    }
+  };
+
+  nx.dasherize = function (str) {
+    return str.replace(/::/g, '/')
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+      .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+      .replace(/_/g, '-')
+      .toLowerCase()
   };
 
   nx.clone = function (target, source, deep) {
