@@ -234,7 +234,7 @@ var nx = {
   };
 
   nx.path = function (target, path, value) {
-    if (nx.isString(path)) {
+    if (!nx.isString(path)) {
       nx.error('Path must be a string!');
     }
 
