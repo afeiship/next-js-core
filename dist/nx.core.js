@@ -1,5 +1,5 @@
 var nx = {
-  DEBUG:false,
+  DEBUG: false,
   BREAKER: {},
   VERSION: '1.0.2',
   GLOBAL: (function () {
@@ -55,6 +55,9 @@ var nx = {
   };
 
   nx.type = function (obj) {
+    if (obj && obj.__type__) {
+      return obj.__type__;
+    }
     return obj == null ? String(obj) :
     class2type[toString.call(obj)] || 'object';
   };
@@ -252,7 +255,7 @@ if (typeof module !== 'undefined' && module.exports) {
     off: function (name, handler, context) {
       var listeners = this.__listeners__[name];
       if (handler) {
-        nx.each(listeners, function (listener, index) {
+        nx.each(listeners, function (index, listener) {
           if (listener.handler === handler && (!context || listener.context === context )) {
             listeners.splice(index, 1);
           }
@@ -264,7 +267,7 @@ if (typeof module !== 'undefined' && module.exports) {
     fire: function (name, inArgs) {
       var listeners = this.__listeners__[name];
       if (listeners) {
-        nx.each(listeners, function (listener) {
+        nx.each(listeners, function (index, listener) {
           if (listener && listener.handler) {
             if (listener.handler.call(listener.context || listener.owner, listener.owner, inArgs) === false) {
               return nx.BREAKER;
@@ -284,7 +287,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   var methods = nx.mix({
     toString: function () {
-      return '[object ' + this.__type__ + ']';
+      return '[Class ' + this.__type__ + ']';
     },
     base: function () {
       //TODO:NOT SUPPORT ES5 `USE STRICT` MODE
@@ -372,6 +375,7 @@ if (typeof module !== 'undefined' && module.exports) {
     __type__: 'nx.Object',
     __classId__: 0,
     __init__: nx.noop,
+    __static_init__: nx.noop,
     __mixins__: [],
     __statics__: {},
     __properties__: {},
@@ -388,7 +392,6 @@ if (typeof module !== 'undefined' && module.exports) {
 
   nx.defineProperty = function (target, name, meta) {
     var key = '@' + name;
-    var valType;
     meta = (nx.isObject(meta)) ? meta : {
       value: meta
     };
@@ -398,13 +401,12 @@ if (typeof module !== 'undefined' && module.exports) {
     if ('value' in meta) {
       value = meta.value;
       filed = '_' + name;
-      valType = nx.type(value);
 
       getter = function () {
         if (filed in this) {
           return this[filed];
         } else {
-          return nx.isFunction(valType) ? value.call(this) : value;
+          return nx.isFunction(value) ? value.call(this) : value;
         }
       };
 
@@ -471,33 +473,34 @@ if (typeof module !== 'undefined' && module.exports) {
   var ArraySlice = Array.prototype.slice;
 
   var __ = {
-    distinct: function (inArray) {
+    distinct: function (array) {
       var result = [],
         map = {},
         key;
 
-      inArray.forEach(function (val) {
+      array.forEach(function (val) {
         key = val.__type__;
         if (!map[key]) {
           map[key] = true;
           result.push(val);
         }
       });
-      return result || inArray;
+      return result || array;
     },
     union: function () {
       var result = [];
-      nx.each(arguments, function (item) {
-        result = result.concat(item || [])
+      nx.each(arguments, function (index, item) {
+        result = result.concat(item || []);
       });
       return __.distinct(result);
     }
   };
 
-  function LifeCycle(inType, inMeta) {
-    this.type = inType;
-    this.meta = inMeta;
-    this.base = inMeta.extend || nx.RootClass;
+  function LifeCycle(type, meta) {
+    this.type = type;
+    this.meta = meta;
+    this.base = meta.extends || nx.RootClass;
+    this.$base = this.base.prototype;
     this.__classMeta__ = {};
     this.__Class__ = null;
     this.__constructor__ = null;
@@ -507,12 +510,14 @@ if (typeof module !== 'undefined' && module.exports) {
     constructor: LifeCycle,
     initMetaProcessor: function () {
       var methods = this.meta.methods || {};
+      var statics = this.meta.statics || {};
       nx.mix(this.__classMeta__, {
         __type__: this.type,
         __meta__: this.meta,
         __base__: this.base,
         __classId__: classId++,
-        __init__: methods.init || this.base.__init__
+        __init__: methods.init || this.base.__init__,
+        __static_init__: statics.init || this.base.__static_init__
       });
     },
     createClassProcessor: function () {
@@ -538,7 +543,7 @@ if (typeof module !== 'undefined' && module.exports) {
         mixinItemProperties = {},
         mixinItemStatics = {};
 
-      nx.each(mixins, function (mixinItem) {
+      nx.each(mixins, function (index, mixinItem) {
         mixItemMixins = mixinItem.__mixins__;
         mixinItemMethods = mixinItem.__methods__;
         mixinItemProperties = mixinItem.__properties__;
@@ -561,13 +566,13 @@ if (typeof module !== 'undefined' && module.exports) {
       this.defineProperties(classMeta);
       this.defineStatics(classMeta);
     },
-    defineMethods: function (inClassMeta) {
+    defineMethods: function (classMeta) {
       var metaMethods = this.meta.methods || {};
       var methods = Object.keys(metaMethods);
-      var extendMethods = inClassMeta.__methods__;
+      var extendMethods = classMeta.__methods__;
       var target = this.__Class__.prototype;
 
-      nx.each(extendMethods, function (method, name) {
+      nx.each(extendMethods, function (name, method) {
         nx.defineMethod(target, name, method);
         if (methods.indexOf(name) > -1) {
           nx.defineMethod(target, name, metaMethods[name]);
@@ -575,21 +580,21 @@ if (typeof module !== 'undefined' && module.exports) {
         }
       });
 
-      nx.each(metaMethods, function (method, name) {
+      nx.each(metaMethods, function (name, method) {
         if (!target[name]) {
           nx.defineMethod(target, name, method);
         }
       });
 
-      inClassMeta.__methods__ = nx.mix(extendMethods, metaMethods);
+      classMeta.__methods__ = nx.mix(extendMethods, metaMethods);
 
     },
-    defineProperties: function (inClassMeta) {
+    defineProperties: function (classMeta) {
       var metaProperties = this.meta.properties || {};
       var properties = Object.keys(metaProperties);
-      var extendProperties = inClassMeta.__properties__;
+      var extendProperties = classMeta.__properties__;
       var target = this.__Class__.prototype;
-      nx.each(extendProperties, function (prop, name) {
+      nx.each(extendProperties, function (name, prop) {
         var member,
           extendMember;
         member = nx.defineProperty(target, name, prop);
@@ -601,16 +606,16 @@ if (typeof module !== 'undefined' && module.exports) {
           extendMember.get.__base__ = member.get;
         }
       });
-      nx.each(metaProperties, function (prop, name) {
+      nx.each(metaProperties, function (name, prop) {
         if (!target[name]) {
           nx.defineProperty(target, name, prop);
         }
       });
-      inClassMeta.__properties__ = nx.mix(extendProperties, metaProperties);
+      classMeta.__properties__ = nx.mix(extendProperties, metaProperties);
     },
-    defineStatics: function (inClassMeta) {
-      var staticsMembers = nx.mix(inClassMeta.__statics__, this.meta.statics);
-      nx.each(staticsMembers, function (staticMeta, staticKey) {
+    defineStatics: function (classMeta) {
+      var staticsMembers = nx.mix(classMeta.__statics__, this.meta.statics);
+      nx.each(staticsMembers, function (staticKey, staticMeta) {
         nx.defineStatic(this.__Class__, staticKey, staticMeta);
       }, this);
     },
@@ -618,17 +623,15 @@ if (typeof module !== 'undefined' && module.exports) {
       var classMeta = this.__classMeta__;
       var mixins = classMeta.__mixins__;
       this.__constructor__ = function () {
-        nx.each(mixins, function (mixItem) {
+        nx.each(mixins, function (index, mixItem) {
           mixItem.__init__.call(this);
         }, this);
         classMeta.__init__.apply(this, ArraySlice.call(arguments));
       };
     },
     staticsConstructorProcessor: function () {
-      var statics = this.meta.statics;
-      if (statics && statics.init) {
-        statics.init.call(this.__Class__);
-      }
+      var classMeta = this.__classMeta__;
+      classMeta.__static_init__.call(this.__Class__);
     },
     registerNsProcessor: function () {
       var type = this.type,
@@ -663,8 +666,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
 
   if (nx.DEBUG) {
-    nx.$ = function (inId) {
-      return instanceMap[inId];
+    nx.$ = function (id) {
+      return instanceMap[id];
     };
   }
 

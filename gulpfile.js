@@ -31,8 +31,8 @@
       conf.src + '/core2/oop-define-meta.js',
       conf.src + '/core2/oop.js'
     ],
-    dist: 'next-core2.js',
-    mini: 'next-core2.min.js'
+    dist: 'nx.core.js',
+    mini: 'nx.core.min.js'
   };
 
   var filter = gulpFilter(['*'], {restore: true});
@@ -53,7 +53,7 @@
       .pipe(gulp.dest('dist'));
   });
 
-  gulp.task('uglify-v2', function () {
+  gulp.task('uglify-v2', ['clean'],function () {
     return gulp.src(filesV2.src)
       .pipe(concat(filesV2.dist))
       .pipe(filter)
@@ -66,6 +66,6 @@
   });
 
   gulp.task('default-v1', ['uglify-v1']);
-  gulp.task('default-v2', ['uglify-v2']);
+  gulp.task('default', ['uglify-v2']);
 
 }());
