@@ -17,6 +17,7 @@ var nx = {
     slice = emptyArray.slice,
     concat = emptyArray.concat;
 
+  var rPath = /(?:{)([\w.]+?)(?:})/gm;
   var javascriptType = 'Boolean Number String Function Array Date RegExp Object Error';
 
   //populate class2type map:
@@ -26,6 +27,10 @@ var nx = {
 
 
   nx.noop = function () {
+  };
+
+  nx.error = function (msg) {
+    throw new Error(msg);
   };
 
   nx.each = function (target, callback, context) {
@@ -72,6 +77,10 @@ var nx = {
 
   nx.isNumber = function (obj) {
     return !isNaN(obj) && typeof(obj) == 'number';
+  };
+
+  nx.isBoolean = function (obj) {
+    return typeof(obj) == 'boolean';
   };
 
   nx.isString = function (obj) {
@@ -225,8 +234,8 @@ var nx = {
   };
 
   nx.path = function (target, path, value) {
-    if (typeof path !== 'string') {
-      throw new Error('Path must be a string!');
+    if (nx.isString(path)) {
+      nx.error('Path must be a string!');
     }
 
     var paths = path.split('.'),
@@ -245,6 +254,17 @@ var nx = {
 
       result[last] = value;
     }
+    return result;
+  };
+
+  nx.format = function (string, args) {
+    var result = string || '';
+    var replaceFn = nx.isArray(args) ? function (str, match) {
+      return args[match];
+    } : function (str, match) {
+      return nx.path(args, match);
+    };
+    result = string.replace(rPath, replaceFn);
     return result;
   };
 
