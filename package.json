@@ -1,8 +1,8 @@
 {
   "name": "next-js-core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A javascript oop toolkit.",
-  "main": "dest/nx.core.min.js",
+  "main": "gulpfile.js",
   "directories": {
     "example": "example",
     "test": "test"
@@ -17,12 +17,20 @@
   "keywords": [
     "oop"
   ],
-  "files":[
+  "files": [
     "dist/nx.core.js",
     "dist/nx.core.min.js"
   ],
   "author": "afei",
   "license": "MIT",
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-filter": "^3.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.5.1"
+  },
   "bugs": {
     "url": "https://github.com/afeiship/next-js-core/issues"
   },

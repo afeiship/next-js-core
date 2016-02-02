@@ -2,7 +2,10 @@
   "name": "next-js-core",
   "homepage": "https://github.com/afeiship/next-js-core",
   "description": "A javascript oop toolkit.",
-  "main": "dist/nx.core.min.js",
+  "main": [
+    "dist/nx.core.js",
+    "dist/nx.core.min.js"
+  ],
   "moduleType": [],
   "keywords": [
     "javascript",

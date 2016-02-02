@@ -1,13 +1,14 @@
-nx = {
+var nx = {
   BREAKER: {},
-  VERSION: '0.0.1',
+  VERSION: '1.0.2',
   GLOBAL: (function () {
     return this;
   }).call(null)
 };
 
-(function (nx, global, undefined) {
+(function (nx, global) {
 
+  var undefined;
   var toString = Object.prototype.toString;
   var class2type = {
     '[object Boolean]': 'Boolean',
