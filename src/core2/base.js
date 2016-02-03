@@ -290,8 +290,15 @@ var nx = {
 
   nx.toArray = function (obj) {
     if (!obj) return [];
-    if (obj.length === +obj.length) return slice.call(obj);
+    if (nx.isArrayLike(obj)) return slice.call(obj);
     return [obj];
+  };
+
+  nx.returnTrue = function () {
+    return true;
+  };
+  nx.returnFalse = function () {
+    return false;
   };
 
   nx.parse = function (value) {
@@ -300,6 +307,10 @@ var nx = {
 
   nx.stringify = function (value, replacer, space) {
     return JSON.stringify(value, replacer, space);
+  };
+
+  nx.createMap = function () {
+    return Object.create(null);
   };
 
 }(nx, nx.GLOBAL));
