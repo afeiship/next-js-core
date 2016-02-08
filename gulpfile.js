@@ -31,8 +31,8 @@
       conf.src + '/core2/oop-define-meta.js',
       conf.src + '/core2/oop.js'
     ],
-    dist: 'nx.core.js',
-    mini: 'nx.core.min.js'
+    dist: 'next-js-core.js',
+    mini: 'next-js-core.min.js'
   };
 
   var filter = gulpFilter(['*'], {restore: true});
