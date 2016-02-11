@@ -431,12 +431,25 @@ if (typeof module !== 'undefined' && module.exports) {
     setMeta: function (name, value) {
       this.__meta__[name] = value;
     },
-    member: function (name) {
-      return this['@' + name] || this[name] || this.constructor[name];
+    member: function (inName) {
+      return this[inName] || this['@on' + inName];
     },
-    memberType: function (name) {
-      var member = this.member(name);
-      return member.__type__;
+    memberMeta: function (inName) {
+      var member = this.member(inName);
+      return member ? member.__meta__ : member;
+    },
+    memberType: function (inName) {
+      var meta = this.memberMeta(inName);
+      switch (typeof meta) {
+        case 'object':
+          return 'property';
+        case 'string':
+          return 'event';
+        case 'function':
+          return 'method';
+        case 'undefined':
+          return 'undefined';
+      }
     },
     __is__: function (type) {
       return this.is(type);
