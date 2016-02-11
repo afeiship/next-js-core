@@ -107,6 +107,59 @@ var nx = {
     return nx.isObject(obj) && !nx.isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype;
   };
 
+
+  nx.has = function (inTarget, inName) {
+    if (inTarget) {
+      if (inTarget.__has__) {
+        return inTarget.__has__(inName);
+      } else {
+        return inName in inTarget;
+      }
+    }
+    return false;
+  };
+
+  nx.get = function (inTarget, inName) {
+    if (inTarget) {
+      if (inTarget.__get__) {
+        return inTarget.__get__(inName);
+      } else {
+        return inTarget[inName];
+      }
+    }
+  };
+
+  nx.set = function (inTarget, inName, inValue) {
+    if (inTarget) {
+      if (inTarget.__set__) {
+        return inTarget.__set__(inName, inValue);
+      } else {
+        return inTarget[inName] = inValue;
+      }
+    }
+  };
+
+  nx.gets = function (inTarget) {
+    if (inTarget) {
+      if (inTarget.__gets__) {
+        return inTarget.__gets__();
+      } else {
+        return nx.mix({}, inTarget);
+      }
+    }
+  };
+
+  nx.sets = function (inTarget, inObject) {
+    if (inTarget) {
+      if (inTarget.__sets__) {
+        return inTarget.__sets__(inObject);
+      } else {
+        return nx.mix(inTarget, inObject);
+      }
+    }
+  };
+
+
   nx.is = function (target, type) {
     if (target && target.__is__) {
       return target.__is__(type);
