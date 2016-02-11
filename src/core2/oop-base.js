@@ -45,13 +45,13 @@
     },
     gets: function () {
       var result = {};
-      nx.each(this.__properties__, function (val, name) {
+      nx.each(this.__properties__, function (name, val) {
         result[name] = this.get(name);
       }, this);
       return result;
     },
     sets: function (target) {
-      nx.each(target, function (val, name) {
+      nx.each(target, function (name, val) {
         this.set(name, val);
       }, this);
     },
