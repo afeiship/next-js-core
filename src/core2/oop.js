@@ -32,7 +32,7 @@
   function LifeCycle(type, meta) {
     this.type = type;
     this.meta = meta;
-    this.base = meta.extends || nx.RootClass;
+    this.base = meta.extend || nx.RootClass;
     this.$base = this.base.prototype;
     this.__classMeta__ = {};
     this.__Class__ = null;
