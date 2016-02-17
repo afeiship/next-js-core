@@ -18,9 +18,8 @@
       conf.src + '/core/event.js',
       conf.src + '/core/oop-base.js',
       conf.src + '/core/oop.js'
-    ],
-    dist: 'next-core.js',
-    mini: 'next-core.min.js'
+    ],dist: 'next-js-core.js',
+    mini: 'next-js-core.min.js'
   };
 
   var filesV2={
@@ -65,7 +64,7 @@
       .pipe(gulp.dest('dist'));
   });
 
-  gulp.task('default-v1', ['uglify-v1']);
-  gulp.task('default', ['uglify-v2']);
+  gulp.task('default', ['uglify-v1']);
+  gulp.task('default-v2', ['uglify-v2']);
 
 }());
