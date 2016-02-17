@@ -103,7 +103,7 @@
 
   var meta = {
     constructor: nx.RootClass,
-    __type__: 'nx.Object',
+    __type__: 'nx.RootClass',
     __classId__: 0,
     __init__: nx.noop,
     __static_init__: nx.noop,
