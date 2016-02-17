@@ -167,8 +167,9 @@ var nx = {
       if (typeof type === 'string') {
         switch (type) {
           case 'undefined':
+            return target === undefined;
           case 'null':
-            return String(type);
+            return target === null;
           case 'object':
             return nx.isObject(target);
           case 'plain':
@@ -526,7 +527,7 @@ if (typeof module !== 'undefined' && module.exports) {
 
   var meta = {
     constructor: nx.RootClass,
-    __type__: 'nx.Object',
+    __type__: 'nx.RootClass',
     __classId__: 0,
     __init__: nx.noop,
     __static_init__: nx.noop,
