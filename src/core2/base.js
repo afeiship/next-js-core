@@ -167,8 +167,9 @@ var nx = {
       if (typeof type === 'string') {
         switch (type) {
           case 'undefined':
+            return target === undefined;
           case 'null':
-            return String(type);
+            return target === null;
           case 'object':
             return nx.isObject(target);
           case 'plain':
