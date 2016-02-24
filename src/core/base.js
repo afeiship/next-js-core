@@ -1,55 +1,52 @@
-var nx = {
-  DEBUG: false,
+nx = {
   BREAKER: {},
-  VERSION: '1.0.2',
+  VERSION: '0.0.1',
   GLOBAL: (function () {
     return this;
   }).call(null)
 };
 
-(function (nx, global) {
+(function (nx, global, undefined) {
 
-  var undefined;
-  var class2type = {};
-  var toString = class2type.toString;
-  var emptyArray = [],
-    filter = emptyArray.filter,
-    slice = emptyArray.slice,
-    concat = emptyArray.concat;
+  var toString = Object.prototype.toString;
+  var class2type = {
+    '[object Boolean]': 'Boolean',
+    '[object Number]': 'Number',
+    '[object String]': 'String',
+    '[object Function]': 'Function',
+    '[object Array]': 'Array',
+    '[object Date]': 'Date',
+    '[object RegExp]': 'RegExp',
+    '[object Object]': 'Object',
+    '[object Error]': 'Error'
+  };
 
-  var rPath = /(?:{)([\w.]+?)(?:})/gm;
-  var javascriptType = 'Boolean Number String Function Array Date RegExp Object Error';
-
-  //populate class2type map:
-  javascriptType.split(' ').forEach(function (name) {
-    class2type["[object " + name + "]"] = name.toLowerCase()
-  });
-
+  var __ = {
+    typeString: function (inTarget) {
+      return toString.call(inTarget).slice(8, -1);
+    }
+  };
 
   nx.noop = function () {
   };
 
-  nx.error = function (msg) {
-    throw new Error(msg);
-  };
-
-  nx.each = function (target, callback, context) {
+  nx.each = function (inTarget, inCallback, inContext) {
     var key, length;
-    if (target) {
-      if (target.__each__) {
-        target.__each__(callback, context);
+    if (inTarget) {
+      if (inTarget.__each__) {
+        inTarget.__each__(inCallback, inContext);
       } else {
-        length = target.length;
-        if (nx.isArrayLike(target)) {
+        length = inTarget.length;
+        if (length >= 0) {
           for (key = 0; key < length; key++) {
-            if (callback.call(context, key, target[key]) === nx.BREAKER) {
+            if (inCallback.call(inContext, inTarget[key], key) === nx.BREAKER) {
               break;
             }
           }
         } else {
-          for (key in target) {
-            if (target.hasOwnProperty(key)) {
-              if (callback.call(context, key, target[key]) === nx.BREAKER) {
+          for (key in inTarget) {
+            if (inTarget.hasOwnProperty(key)) {
+              if (inCallback.call(inContext, inTarget[key], key) === nx.BREAKER) {
                 break;
               }
             }
@@ -59,315 +56,57 @@ var nx = {
     }
   };
 
-  nx.type = function (obj) {
-    if (obj && obj.__type__) {
-      return obj.__type__;
+  nx.mix = function (inTarget) {
+    var i, length;
+    for (i = 1, length = arguments.length; i < length; i++) {
+      nx.each(arguments[i], function (val, key) {
+        inTarget[key] = val;
+      });
     }
-    return obj == null ? String(obj) :
-    class2type[toString.call(obj)] || 'object';
+    return inTarget;
   };
 
-  nx.isDocument = function (obj) {
-    return obj != null && obj.nodeType == 9;
-  };
-
-  nx.isWindow = function (obj) {
-    return obj != null && obj == obj.global;
-  };
-
-  nx.isNumber = function (obj) {
-    return !isNaN(obj) && typeof(obj) == 'number';
-  };
-
-  nx.isBoolean = function (obj) {
-    return typeof(obj) == 'boolean';
-  };
-
-  nx.isString = function (obj) {
-    return typeof(obj) == 'string';
-  };
-
-  nx.isArray = Array.isArray || function (obj) {
-      return obj instanceof Array;
-    };
-
-  nx.isArrayLike = function (obj) {
-    return typeof obj.length == 'number';
-  };
-
-  nx.isFunction = function (obj) {
-    return typeof(obj) == 'function';
-  };
-
-  nx.isObject = function (obj) {
-    return nx.type(obj) == 'object';
-  };
-
-  nx.isPlainObject = function (obj) {
-    return nx.isObject(obj) && !nx.isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype;
-  };
-
-
-  nx.has = function (inTarget, inName) {
-    if (inTarget) {
-      if (inTarget.__has__) {
-        return inTarget.__has__(inName);
-      } else {
-        return inName in inTarget;
-      }
-    }
-    return false;
-  };
-
-  nx.get = function (inTarget, inName) {
-    if (inTarget) {
-      if (inTarget.__get__) {
-        return inTarget.__get__(inName);
-      } else {
-        return inTarget[inName];
-      }
-    }
-  };
-
-  nx.set = function (inTarget, inName, inValue) {
-    if (inTarget) {
-      if (inTarget.__set__) {
-        return inTarget.__set__(inName, inValue);
-      } else {
-        return inTarget[inName] = inValue;
-      }
-    }
-  };
-
-  nx.gets = function (inTarget) {
-    if (inTarget) {
-      if (inTarget.__gets__) {
-        return inTarget.__gets__();
-      } else {
-        return nx.mix({}, inTarget);
-      }
-    }
-  };
-
-  nx.sets = function (inTarget, inObject) {
-    if (inTarget) {
-      if (inTarget.__sets__) {
-        return inTarget.__sets__(inObject);
-      } else {
-        return nx.mix(inTarget, inObject);
-      }
-    }
-  };
-
-
-  nx.is = function (target, type) {
-    if (target && target.__is__) {
-      return target.__is__(type);
+  nx.type = function (inTarget) {
+    var typeString;
+    if (inTarget && inTarget.__type__) {
+      return inTarget.__type__;
     } else {
-      if (typeof type === 'string') {
-        switch (type) {
-          case 'undefined':
-            return target === undefined;
-          case 'null':
-            return target === null;
-          case 'object':
-            return nx.isObject(target);
-          case 'plain':
-            return nx.isPlainObject(target);
-          case 'string':
-          case 'boolean':
-          case 'number':
-          case 'function':
-            return typeof(target) === type;
-          case 'array':
-            return nx.isArray(target);
-          default:
-            return toString(target).toLowerCase().slice(8, -1) === type;
-        }
-      } else if (typeof type === 'function') {
-        return target instanceof type;
+      if (inTarget === null) {
+        return 'Null';
       }
-    }
-  };
-
-  nx.unique = function (array) {
-    return filter.call(array, function (item, idx) {
-      return array.indexOf(item) == idx;
-    });
-  };
-
-  nx.flatten = function (array) {
-    return array.length > 0 ? concat.apply([], array) : array;
-  };
-
-  nx.compact = function (array) {
-    return filter.call(array, function (item) {
-      return item != null;
-    });
-  };
-
-  nx.grep = function (array, callback) {
-    return filter.call(array, callback);
-  };
-
-  nx.isEmptyObject = function (obj) {
-    var key;
-    for (key in obj) return false;
-    return true;
-  };
-
-  nx.inArray = function (target, array, i) {
-    return emptyArray.indexOf.call(array, target, i);
-  };
-
-  nx.camelCase = function (str) {
-    return str.replace(/-+(.)?/g, function (match, chr) {
-      return chr ? chr.toUpperCase() : '';
-    });
-  };
-
-  nx.trim = function (str) {
-    return str == null ? "" : String.prototype.trim.call(str)
-  };
-
-  nx.deserializeValue = function (value) {
-    try {
-      return value ?
-      value == "true" ||
-      ( value == "false" ? false :
-        value == "null" ? null :
-          +value + "" == value ? +value :
-            /^[\[\{]/.test(value) ? $.parseJSON(value) :
-              value )
-        : value;
-    } catch (e) {
-      return value;
-    }
-  };
-
-  nx.dasherize = function (str) {
-    return str.replace(/::/g, '/')
-      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
-      .replace(/([a-z\d])([A-Z])/g, '$1_$2')
-      .replace(/_/g, '-')
-      .toLowerCase()
-  };
-
-  nx.clone = function (target, source, deep) {
-    var isPlainObject = nx.isPlainObject,
-      isArray = nx.isArray;
-    var key;
-    for (key in source) {
-      if (deep) {
-        if (isPlainObject(source[key]) || isArray(source[key])) {
-          if (isPlainObject(source[key]) && !isPlainObject(target[key])) {
-            target[key] = {};
-          }
-          if (isArray(source[key]) && !isArray(target[key])) {
-            target[key] = [];
-          }
-          nx.clone(target[key], source[key], deep);
-        }
+      if (inTarget === undefined) {
+        return 'Undefined';
       }
-      else if (source[key] !== undefined) {
-        target[key] = source[key];
-      }
+      typeString = toString.call(inTarget);
+      return class2type[typeString] || __.typeString(inTarget);
     }
   };
 
-  nx.mix = function (target) {
-    var deep, args = slice.call(arguments, 1);
-    if (typeof target == 'boolean') {
-      deep = target;
-      target = args.shift();
-    }
-    args.forEach(function (arg) {
-      nx.clone(target, arg, deep);
-    });
-    return target;
-  };
-
-  nx.map = function (target, callback) {
-    var value, values = [], i, key;
-    if (nx.isArrayLike(target)) {
-      for (i = 0; i < target.length; i++) {
-        value = callback(target[i], i);
-        if (value != null) {
-          values.push(value);
-        }
-      }
-    } else {
-      for (key in target) {
-        value = callback(target[key], key);
-        if (value != null) {
-          values.push(value);
-        }
-      }
-    }
-    return nx.flatten(values);
-  };
-
-  nx.path = function (target, path, value) {
-    if (!nx.isString(path)) {
-      nx.error('Path must be a string!');
+  nx.path = function (inTarget, inPath, inValue) {
+    if (typeof inPath !== 'string') {
+      throw new Error('Path must be a string!');
     }
 
-    var paths = path.split('.'),
-      result = target || global,
+    var paths = inPath.split('.'),
+      result = inTarget || nx.GLOBAL,
       last;
 
-    if (undefined === value) {
-      paths.forEach(function (path) {
+    if (undefined === inValue) {
+      nx.each(paths, function (path) {
         result = result[path];
       });
     } else {
       last = paths.pop();
-      paths.forEach(function (path) {
+      nx.each(paths, function (path) {
         result = result[path] = result[path] || {};
       });
-
-      result[last] = value;
+      result[last] = inValue;
     }
     return result;
   };
 
-  nx.format = function (string, args) {
-    var result = string || '';
-    var replaceFn = nx.isArray(args) ? function (str, match) {
-      return args[match];
-    } : function (str, match) {
-      return nx.path(args, match);
-    };
-    result = string.replace(rPath, replaceFn);
-    return result;
-  };
-
-  nx.toArray = function (obj) {
-    if (!obj) return [];
-    if (nx.isArrayLike(obj)) return slice.call(obj);
-    return [obj];
-  };
-
-  nx.returnTrue = function () {
-    return true;
-  };
-  nx.returnFalse = function () {
-    return false;
-  };
-
-  nx.parse = function (value) {
-    return JSON.parse(value);
-  };
-
-  nx.stringify = function (value, replacer, space) {
-    return JSON.stringify(value, replacer, space);
-  };
-
-  nx.createMap = function () {
-    return Object.create(null);
-  };
-
 }(nx, nx.GLOBAL));
+
 
 /**
  * Export the "nx" object
