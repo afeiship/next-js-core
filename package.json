@@ -1,9 +1,10 @@
 {
   "name": "next-js-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A javascript oop toolkit.",
   "main": "gulpfile.js",
   "directories": {
+    "src": "src",
     "example": "example",
     "test": "test"
   },
@@ -25,7 +26,7 @@
   "license": "MIT",
   "devDependencies": {
     "del": "^2.2.0",
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^3.0.1",
     "gulp-rename": "^1.2.2",

@@ -64,7 +64,7 @@
       .pipe(gulp.dest('dist'));
   });
 
-  gulp.task('default-v1', ['uglify-v1']);
-  gulp.task('default', ['uglify-v2']);
+  gulp.task('default', ['uglify-v1']);
+  gulp.task('default-v2', ['uglify-v2']);
 
 }());
