@@ -20,8 +20,9 @@
       conf.src + '/event.js',
       conf.src + '/oop-base.js',
       conf.src + '/oop.js'
-    ], dist: 'next-js-core.js',
-    mini: 'next-js-core.min.js'
+    ],
+    dist: 'nx.js',
+    mini: 'nx.min.js'
   };
 
 
