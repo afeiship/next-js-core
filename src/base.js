@@ -22,14 +22,6 @@ var nx = {
     '[object Error]': 'Error'
   };
 
-  var rPath = /(?:{)([\w.]+?)(?:})/gm;
-  var javascriptType = 'Boolean Number String Function Array Date RegExp Object Error';
-
-  //populate class2type map:
-  javascriptType.split(' ').forEach(function (name) {
-    class2type["[object " + name + "]"] = name.toLowerCase()
-  });
-
   var __ = {
     typeString: function (inTarget) {
       return toString.call(inTarget).slice(8, -1);
