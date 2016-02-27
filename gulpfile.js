@@ -21,8 +21,8 @@
       conf.src + '/oop-base.js',
       conf.src + '/oop.js'
     ],
-    dist: 'nx.js',
-    mini: 'nx.min.js'
+    dist: 'next-js-core.js',
+    mini: 'next-js-core.min.js'
   };
 
 
