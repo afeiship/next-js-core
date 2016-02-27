@@ -6,8 +6,9 @@ var nx = {
   }).call(null)
 };
 
-(function (nx, global, undefined) {
+(function (nx, global) {
 
+  var undefined;
   var toString = Object.prototype.toString;
   var class2type = {
     '[object Boolean]': 'Boolean',
@@ -20,6 +21,14 @@ var nx = {
     '[object Object]': 'Object',
     '[object Error]': 'Error'
   };
+
+  var rPath = /(?:{)([\w.]+?)(?:})/gm;
+  var javascriptType = 'Boolean Number String Function Array Date RegExp Object Error';
+
+  //populate class2type map:
+  javascriptType.split(' ').forEach(function (name) {
+    class2type["[object " + name + "]"] = name.toLowerCase()
+  });
 
   var __ = {
     typeString: function (inTarget) {

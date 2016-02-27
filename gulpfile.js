@@ -55,8 +55,7 @@
         },
         namespace: function (file) {
           return 'nx';
-        },
-        templateName: 'amdNodeWeb'
+        }
       }))
       .pipe(gulp.dest('dist'));
   });
