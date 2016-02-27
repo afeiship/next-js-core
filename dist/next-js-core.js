@@ -1,6 +1,15 @@
-nx = {
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.nx = factory();
+  }
+}(this, function() {
+var nx = {
   BREAKER: {},
-  VERSION: '1.0.4',
+  VERSION: '1.0.5',
   GLOBAL: (function () {
     return this;
   }).call(null)
@@ -106,14 +115,6 @@ nx = {
   };
 
 }(nx, nx.GLOBAL));
-
-
-/**
- * Export the "nx" object
- */
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = nx;
-}
 
 (function (nx, global) {
 
@@ -480,3 +481,6 @@ if (typeof module !== 'undefined' && module.exports) {
 
 
 }(nx, nx.GLOBAL));
+
+return nx;
+}));

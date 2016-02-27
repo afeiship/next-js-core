@@ -1,6 +1,6 @@
 {
   "name": "next-js-core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A javascript oop toolkit.",
   "main": "gulpfile.js",
   "directories": {
@@ -30,7 +30,8 @@
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^3.0.1",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.5.1"
+    "gulp-uglify": "^1.5.1",
+    "gulp-umd": "^0.2.0"
   },
   "bugs": {
     "url": "https://github.com/afeiship/next-js-core/issues"

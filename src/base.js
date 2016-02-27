@@ -1,6 +1,6 @@
-nx = {
+var nx = {
   BREAKER: {},
-  VERSION: '1.0.4',
+  VERSION: '1.0.5',
   GLOBAL: (function () {
     return this;
   }).call(null)
@@ -106,11 +106,3 @@ nx = {
   };
 
 }(nx, nx.GLOBAL));
-
-
-/**
- * Export the "nx" object
- */
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = nx;
-}
