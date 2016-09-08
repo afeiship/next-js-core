@@ -3,8 +3,7 @@
   "homepage": "https://github.com/afeiship/next-js-core",
   "description": "A javascript oop toolkit.",
   "main": [
-    "dist/nx.core.js",
-    "dist/nx.core.min.js"
+    "dist/nx.core.js"
   ],
   "moduleType": [],
   "keywords": [

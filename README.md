@@ -1,4 +1,4 @@
-#nx-js-core
+#next-js-core
 ##Homepage:
 + http://afeiship.github.io/next-js-core/
 
